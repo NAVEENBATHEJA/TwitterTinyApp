@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html ng-app="twitterApp">
+
+<head>
+    <title>AngularJS Instant Tweet Search Application</title>
+
+    <!-- Bootstrap JS and CSS -->
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+    <!-- Oauth Anthentication -->
+    <script src="oauth.js"></script>
+
+    <!-- Angular Js Lib and Sanitize -->
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.6.6/angular.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/angular-sanitize/1.6.6/angular-sanitize.min.js"></script>
+
+    <!-- Custom application JS Files -->
+    <script src="app.js"></script>
+    <script src="twitterController.js"></script>
+    <script src="twitterService.js"></script>
+
+    <!-- Custom Style -->
+    <style type="text/css">
+        .vertical-align {
+            display: flex;
+            flex-direction: row;
+            padding-bottom: 15px;
+        }
+        
+        .vertical-align>[class^="col-"],
+        .vertical-align>[class*=" col-"] {
+            display: flex;
+            align-items: center;
+            justify-content: left;
+        }
+
+    </style>
+</head>
+
+<body>
+    <div class="container" ng-controller="TwitterController">
+        <h1>AngularJS Instant Tweet Search Application</h1>
+        <br/>
+        <div class="row">
+            <div class="col-md-6">
+
+                <!-- Click on connect twitter button to connect to twitter account-->
+                <button ng-click="connectButton()" ng-if="!connectedTwitter" id="connectButton" type="button" class="btn btn-primary">Connect Twitter</button>
+
+                <!-- search textbox for search tweets -->
+                <div ng-show="connectedTwitter">
+                    <input type="text" class="form-control" placeholder="Enter search term here" id="searchBox" ng-model="searchItem" ng-keydown="($event.keyCode === 13) && refreshTimeline()" ng-model-options="{debounce: { 'default': 1000, 'blur': 0 }}" />
+                </div>
+
+            </div>
+
+
+            <!-- signout section -->
+            <div class="col-md-6" ng-show="connectedTwitter">
+                <button ng-click="signOut()" id="signOut" type="button" class="btn btn-link">Sign Out</button>
+            </div>
+        </div>
+        <br/>
+
+        <div class="row">
+            <div class="col-md-12" id="results">
+                <!-- display all tweets with profile image in this section -->
+                <div class="row vertical-align" ng-repeat="t in tweets">
+                    <div class="col-md-1">
+                        <img ng-src="{{t.user.profile_image_url}}" class="img-circle">
+                    </div>
+                    <div class="col-md-11" style="padding-left:0px;">
+                        <span ng-bind-html="t.text"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+</body>
+
+</html>
